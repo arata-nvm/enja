@@ -1,0 +1,34 @@
+#!/usr/bin/env python
+
+def preprocess(s: str) -> str:
+  s = s.replace(' / ', '\n')
+  s = s.replace('『', '『\033[31m')
+  s = s.replace('』', '\033[0m』')
+  s = s.replace('『', '『\033[31m')
+  s = s.replace('』', '\033[0m』')
+  return s
+
+def load_dic() -> dict:
+  with open('./ejdic-hand-utf8.txt', 'r', encoding='utf-8') as f:
+    lines = f.readlines()
+
+  dic = dict()
+  for line in lines:
+    cols = line.split('\t')
+    dic[cols[0]] = preprocess(cols[1])
+  return dic
+
+def prompt(dic: dict):
+  while True:
+    word = input('> ').strip()
+    if word not in dic:
+      print(f'{word} is not found.')
+      continue
+    print(dic[word])
+
+def main():
+  dic = load_dic()
+  prompt(dic)
+
+if __name__ == "__main__":
+    main()
